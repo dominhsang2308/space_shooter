@@ -6,7 +6,7 @@ pygame.init()
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Space Shooter")
-
+count = 0
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups):
@@ -74,13 +74,14 @@ class Meteor(pygame.sprite.Sprite):
 
 def collision_sprite():
     #event collision sprites
+    global count
     player_hit = pygame.sprite.spritecollide(player, meteor_sprites, False)
     if player_hit:
         print("Player hit!")
-
     for laser in laser_sprites:
         meteors_hit = pygame.sprite.spritecollide(laser,meteor_sprites, True)
         if meteors_hit:
+            count += len(meteors_hit)
             laser.kill()
 
 #import 
@@ -98,7 +99,8 @@ player = Player(all_sprites)
 running = True
 clock = pygame.time.Clock()
 font = pygame.font.Font(join("images", "Pixeltype.ttf"), 50)
-font_surface = font.render("Scores : 0", False, (255,255,255))
+
+
 #surface
 surf = pygame.Surface((200,150))
 star_positions = []
@@ -128,6 +130,7 @@ while running:
     all_sprites.update(dt)
     #draw        
     all_sprites.draw(screen)
+    font_surface = font.render(f"Scores : {count}", False, (255,255,255))
     screen.blit(font_surface, (10,10))
     pygame.display.update()
 pygame.quit()
